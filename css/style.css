@@ -1,0 +1,141 @@
+/* NAVBAR */
+.navbar {
+    transition: background-color 0.3s ease;
+}
+
+.custom-navbar {
+    background-color: #f6e9d8;
+    border-bottom: 0px solid #4a2c1d;
+    padding: 8px 0;
+}
+
+.custom-navbar .navbar-brand {
+    font-size: 20px;
+    color: #4a2c1d !important;
+}
+
+.custom-navbar .nav-link {
+    color: #4a2c1d !important;
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0 12px;
+    padding: 8px 0;
+    transition: color 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover {
+    text-decoration: underline;
+    color: #6b4226;
+}
+
+.navbar .collapse .ms-auto {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand-title {
+    font-size: 1.25rem;
+}
+
+.brand-tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8b5a2b;
+    transition: 0.2s ease;
+}
+
+.header-avatar:hover {
+    transform: scale(1.1);
+}
+
+/* NAVBAR DROPDOWN SAME COLOR */
+.custom-navbar .dropdown-menu {
+    background-color: #f6e9d8;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.custom-navbar .dropdown-item {
+    color: #4a2c1d;
+    font-weight: 500;
+}
+
+.custom-navbar .dropdown-item:hover {
+    background-color: #ead9bd;
+}
+
+.custom-navbar .dropdown-divider {
+    border-color: #dcc9ae;
+}
+
+/* BUTTONS */
+.btn-warning {
+    background-color: #f7c948;
+    border-color: #f7c948;
+}
+
+.btn-warning:hover {
+    background-color: #e6b83c;
+    border-color: #e6b83c;
+}
+
+.brand-icon {
+    width: 64px;
+    height: auto;
+}
+
+/* FOOTER */
+.site-footer {
+    background-color: #ffffff;
+    color: #333;
+    padding: 60px 0 20px;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.site-footer h6 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.site-footer a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #ddd;
+    margin-top: 40px;
+    padding-top: 15px;
+    font-size: 13px;
+    text-align: center;
+    color: #666;
+}
+
+
