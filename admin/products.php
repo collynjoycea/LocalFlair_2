@@ -122,6 +122,91 @@ $sql = "SELECT p.*, c.category_name, pr.province_name FROM products p
         JOIN provinces pr ON p.province_id = pr.province_id 
         WHERE p.status != 'archived' ORDER BY p.product_id DESC";
 $result = $conn->query($sql);
+
+// ================= EXPORT CSV =================
+if(isset($_GET['export']) && $_GET['export'] == "csv"){
+
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="inventory_export.csv"');
+
+    $output = fopen("php://output", "w");
+
+    fputcsv($output, ["SKU","Product Name","Category","Province","Price","Stock"]);
+
+    $sql = "SELECT p.*, c.category_name, pr.province_name 
+            FROM products p
+            JOIN categories c ON p.category_id = c.category_id
+            JOIN provinces pr ON p.province_id = pr.province_id
+            WHERE p.status != 'archived'";
+
+    $res = $conn->query($sql);
+
+    while($row = $res->fetch_assoc()){
+
+        $sku = !empty($row['sku']) ? $row['sku'] : "LF-" . str_pad($row['product_id'],4,'0',STR_PAD_LEFT);
+
+        fputcsv($output,[
+            $sku,
+            $row['product_name'],
+            $row['category_name'],
+            $row['province_name'],
+            $row['price'],
+            $row['stock']
+        ]);
+    }
+
+    fclose($output);
+    exit();
+}
+
+// ================= EXPORT PDF =================
+if(isset($_GET['export']) && $_GET['export'] == "pdf"){
+
+    require('fpdf/fpdf.php');
+
+    $pdf = new FPDF();
+    $pdf->AddPage();
+    $pdf->SetFont('Arial','B',14);
+
+    $pdf->Cell(190,10,"LocalFlair Inventory Report",0,1,'C');
+    $pdf->Ln(5);
+
+    $pdf->SetFont('Arial','B',10);
+
+    $pdf->Cell(30,8,"SKU",1);
+    $pdf->Cell(50,8,"Product",1);
+    $pdf->Cell(35,8,"Category",1);
+    $pdf->Cell(35,8,"Province",1);
+    $pdf->Cell(20,8,"Price",1);
+    $pdf->Cell(20,8,"Stock",1);
+    $pdf->Ln();
+
+    $pdf->SetFont('Arial','',10);
+
+    $sql = "SELECT p.*, c.category_name, pr.province_name 
+            FROM products p
+            JOIN categories c ON p.category_id = c.category_id
+            JOIN provinces pr ON p.province_id = pr.province_id
+            WHERE p.status != 'archived'";
+
+    $res = $conn->query($sql);
+
+    while($row = $res->fetch_assoc()){
+
+        $sku = !empty($row['sku']) ? $row['sku'] : "LF-" . str_pad($row['product_id'],4,'0',STR_PAD_LEFT);
+
+        $pdf->Cell(30,8,$sku,1);
+        $pdf->Cell(50,8,$row['product_name'],1);
+        $pdf->Cell(35,8,$row['category_name'],1);
+        $pdf->Cell(35,8,$row['province_name'],1);
+        $pdf->Cell(20,8,"P".$row['price'],1);
+        $pdf->Cell(20,8,$row['stock'],1);
+        $pdf->Ln();
+    }
+
+    $pdf->Output();
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -314,6 +399,8 @@ $result = $conn->query($sql);
 
     <?php include "includes/sidebar.php"; ?>
     <?php include "includes/topbar.php"; ?>
+     <?php require ('fpdf/fpdf.php'); ?>
+    
 
     <main class="main">
         <div class="header-flex animate__animated animate__fadeIn">
@@ -353,8 +440,13 @@ $result = $conn->query($sql);
                     while($c = $cRes->fetch_assoc()) echo "<option value='{$c['category_name']}'>{$c['category_name']}</option>";
                     ?>
                 </select>
-                <button class="btn-export csv"><i class="fa-solid fa-file-csv"></i> CSV</button>
-                <button class="btn-export pdf"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                <button class="btn-export csv" onclick="exportCSV()">
+                    <i class="fa-solid fa-file-csv"></i> CSV
+                </button>
+
+                <button class="btn-export pdf" onclick="exportPDF()">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
             </div>
         </div>
 
@@ -602,6 +694,14 @@ $result = $conn->query($sql);
                     setTimeout(() => location.reload(), 800);
                 }
             });
+        }
+
+        function exportCSV(){
+            window.location.href = "?export=csv";
+        }
+
+        function exportPDF(){
+            window.location.href = "?export=pdf";
         }
     </script>
 </body>

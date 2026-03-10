@@ -185,21 +185,25 @@ $topProducts = $conn->query("
         </div>
 
         <section class="cards-grid">
+            <a href="users.php" style="text-decoration:none;">
             <div class="stat-card animate__animated animate__fadeInUp">
                 <div class="icon-box icon-users"><i class="fa-solid fa-users"></i></div>
                 <h4>Total Users</h4>
                 <p><?php echo number_format($userCount); ?></p>
             </div>
+            <a href="orders.php" style="text-decoration:none;">
             <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
                 <div class="icon-box icon-orders"><i class="fa-solid fa-box"></i></div>
                 <h4>Total Orders</h4>
                 <p><?php echo number_format($orderCount); ?></p>
             </div>
+            <a href="sales_report.php" style="text-decoration:none;">
             <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
                 <div class="icon-box icon-sales"><i class="fa-solid fa-peso-sign"></i></div>
                 <h4>Total Sales</h4>
                 <p>₱<?php echo number_format($salesResult, 2); ?></p>
             </div>
+            <a href="orders.php" style="text-decoration:none;">
             <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
                 <div class="icon-box icon-pending"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <h4>Pending Orders</h4>
