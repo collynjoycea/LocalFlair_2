@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id']) && !isset($_SESSION['employee_id'])) {
 
 $host = "localhost";
 $user = "root";
-$pass = "WelCome145";
+$pass = "lily1245";
 $db   = "localflair_db";
 $conn = new mysqli($host, $user, $pass, $db);
 
@@ -18,15 +18,16 @@ if ($conn->connect_error) {
 }
 
 // 2. FETCH DASHBOARD COUNTS
-$countTotal = $conn->query("SELECT COUNT(*) as total FROM products")->fetch_assoc()['total'] ?? 0;
-$countLow   = $conn->query("SELECT COUNT(*) as total FROM products WHERE stock > 0 AND stock <= 10")->fetch_assoc()['total'] ?? 0;
-$countOut   = $conn->query("SELECT COUNT(*) as total FROM products WHERE stock = 0")->fetch_assoc()['total'] ?? 0;
-
-// 3. FETCH PRODUCTS LIST
+// Updated counts excluding archived products
+$countTotal = $conn->query("SELECT COUNT(*) as total FROM products WHERE status IS NULL OR status != 'ARCHIVED'")->fetch_assoc()['total'] ?? 0;
+$countLow   = $conn->query("SELECT COUNT(*) as total FROM products WHERE (status IS NULL OR status != 'ARCHIVED') AND stock > 0 AND stock <= 10")->fetch_assoc()['total'] ?? 0;
+$countOut   = $conn->query("SELECT COUNT(*) as total FROM products WHERE (status IS NULL OR status != 'ARCHIVED') AND stock = 0")->fetch_assoc()['total'] ?? 0;
+// 3. FETCH PRODUCTS LIST (exclude archived products)
 $query = "SELECT p.*, c.category_name, pr.province_name 
           FROM products p 
           LEFT JOIN categories c ON p.category_id = c.category_id 
           LEFT JOIN provinces pr ON p.province_id = pr.province_id 
+          WHERE p.status IS NULL OR p.status != 'ARCHIVED'
           ORDER BY p.created_at DESC";
 $result = $conn->query($query);
 ?>
@@ -102,7 +103,7 @@ $result = $conn->query($query);
         
         .status-pill { padding: 6px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
         .stock-ok { background: #dcfce7; color: #15803d; }
-        .stock-low { background: #fef3c7; color: #b45309; }
+        .stock-low { background: #fef6c7; color: #f2b226; }
         .stock-out { background: #fee2e2; color: #b91c1c; }
 
         .btn-action { 
@@ -115,7 +116,119 @@ $result = $conn->query($query);
         @media (max-width: 1024px) {
             .main { margin-left: 0; width: 100%; padding-top: 130px; }
         }
+
+        .modal-content.orange-theme {
+        background: var(--accent-orange);
+        color: white;
+        padding: 40px;
+        border-radius: 30px;
+        width: 500px;
+        position: relative;
+        box-shadow: 0 25px 50px -12px rgba(233, 90, 36, 0.4);
+    }
+
+  /* Clean White Modal Box */
+    .modal-content.view-theme {
+        background-color: #ffffff !important; 
+        color: #1e293b; /* Dark text for readability on white */
+        padding: 40px;
+        border-radius: 30px;
+        width: 500px;
+        position: relative;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Vibrant Orange Info Boxes */
+    .info-box {
+        background: #e95a24; /* LocalFlair Orange */
+        padding: 15px;
+        border-radius: 15px;
+        border: none;
+    }
+
+    /* Labels inside the orange boxes */
+    .info-box label {
+        display: block;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+        color: rgba(255, 255, 255, 0.8); /* Faded white label */
+    }
+
+    /* Data text inside the orange boxes */
+    .info-box p {
+        font-weight: 600;
+        font-size: 15px;
+        margin: 0;
+        color: #ffffff; /* Solid white text */
+    }
+
+    /* Title and Description on the white background */
+    .modal-content.view-theme h2 { 
+        color: #1e293b; 
+        margin-top: 20px; 
+        font-size: 26px; 
+        font-weight: 800;
+    }
+
+    .view-desc-text {
+        color: #64748b;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* Close Button: Orange circle with White X */
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border: none;
+        background: #e95a24;
+        color: #ffffff;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .close-btn:hover { 
+        transform: rotate(90deg); 
+        background: #d34e1f;
+    }
     </style>
+<div id="viewModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+    <div class="modal-content view-theme">
+        <button class="close-btn" onclick="closeViewModal()">&times;</button>
+        
+        <div style="text-align:center; margin-bottom:25px;">
+            <div style="position: relative; display: inline-block;">
+                <img id="viewImg" src="" style="width:130px; height:130px; border-radius:25px; object-fit:cover; border: 4px solid #e95a24; box-shadow: 0 8px 15px rgba(233, 90, 36, 0.2);">
+            </div>
+            <h2 id="viewName"></h2>
+            
+            <div id="viewStatus" style="margin-top: 10px; display: inline-block; padding: 6px 16px; border-radius: 10px; font-weight: 800; font-size: 11px; background: #fff7ed; color: #e95a24;"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom: 20px;">
+            <div class="info-box"><label>Price</label><p id="viewPrice"></p></div>
+            <div class="info-box"><label>Stock</label><p id="viewStock"></p></div>
+            <div class="info-box"><label>Category</label><p id="viewCat"></p></div>
+            <div class="info-box"><label>Province</label><p id="viewProv"></p></div>
+        </div>
+        
+        <div style="padding: 15px; border-radius: 15px; background: #f8fafc; border: 1px solid #f1f5f9;">
+            <label style="display:block; font-size:10px; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-bottom:5px;">Description</label>
+            <p id="viewDesc" class="view-desc-text"></p>
+        </div>
+    </div>
+</div>
 </head>
 <body>
 
@@ -128,8 +241,7 @@ $result = $conn->query($query);
                 <h1>Product Inventory</h1>
                 <p style="color:var(--text-muted); font-size:14px;">Monitor and manage your shop's stock levels.</p>
             </div>
-            <a href="add_product.php" style="background:var(--accent-orange); color:white; padding:12px 24px; border-radius:14px; text-decoration:none; font-weight:700; font-size:14px; box-shadow: 0 4px 12px rgba(233, 90, 36, 0.2);">
-                <i class="fa fa-plus"></i> Add New Product
+          
             </a>
         </div>
 
@@ -189,12 +301,13 @@ $result = $conn->query($query);
                                 else echo '<span class="status-pill stock-ok">In Stock</span>';
                             ?>
                         </td>
-                        <td>
-                            <div style="display:flex; gap:8px;">
-                                <a href="view_product.php?id=<?= $row['product_id'] ?>" class="btn-action" title="View"><i class="fa fa-eye"></i></a>
-                                <a href="add_product.php?id=<?= $row['product_id'] ?>" class="btn-action" title="Edit"><i class="fa fa-edit"></i></a>
-                            </div>
-                        </td>
+                       <td>
+    <div style="display:flex; gap:8px;">
+        <button type="button" onclick='openViewModal(<?= json_encode($row) ?>)' class="btn-action" title="View">
+            <i class="fa fa-eye"></i>
+        </button>
+    </div>
+</td>
                     </tr>
                     <?php endwhile; endif; ?>
                 </tbody>
@@ -202,40 +315,82 @@ $result = $conn->query($query);
         </div>
     </div>
 
-    <script>
-        // Synchronize topbar search with the table
-        const topSearch = document.getElementById('dirSearch');
-        const cards = document.querySelectorAll('.status-card');
-        const rows = document.querySelectorAll('#inventoryTable tbody tr');
+   <script>
+    // 1. SELECT ELEMENTS (Declared only once!)
+    const topSearch = document.getElementById('dirSearch');
+    const cards = document.querySelectorAll('.status-card');
+    const rows = document.querySelectorAll('#inventoryTable tbody tr');
+    const viewModal = document.getElementById('viewModal');
 
-        function filterTable() {
-            const searchTerm = topSearch.value.toLowerCase();
-            const activeCard = document.querySelector('.status-card.active');
-            const statusFilter = activeCard ? activeCard.getAttribute('data-filter').toUpperCase() : 'ALL';
+    // 2. FILTERING & SEARCH LOGIC
+    function filterTable() {
+        const searchTerm = topSearch ? topSearch.value.toLowerCase() : "";
+        const activeCard = document.querySelector('.status-card.active');
+        const statusFilter = activeCard ? activeCard.getAttribute('data-filter').toUpperCase() : 'ALL';
 
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                const statusCell = row.querySelector('.status-cell');
-                const status = statusCell ? statusCell.innerText.toUpperCase() : '';
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const statusCell = row.querySelector('.status-cell');
+            const statusText = statusCell ? statusCell.innerText.toUpperCase() : '';
 
-                const matchesSearch = text.includes(searchTerm);
-                const matchesStatus = (statusFilter === 'ALL' || status.includes(statusFilter));
+            const matchesSearch = text.includes(searchTerm);
+            const matchesStatus = (statusFilter === 'ALL' || statusText.includes(statusFilter));
 
-                row.style.display = (matchesSearch && matchesStatus) ? "" : "none";
-            });
-        }
-
-        if(topSearch) {
-            topSearch.addEventListener('keyup', filterTable);
-        }
-
-        cards.forEach(card => {
-            card.addEventListener('click', function() {
-                cards.forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                filterTable();
-            });
+            row.style.display = (matchesSearch && matchesStatus) ? "" : "none";
         });
-    </script>
+    }
+
+    // Event Listeners for Search and Cards
+    if(topSearch) topSearch.addEventListener('keyup', filterTable);
+
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            cards.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            filterTable();
+        });
+    });
+
+    // 3. MODAL LOGIC
+    function openViewModal(p) {
+        // Fill data
+        document.getElementById('viewName').innerText = p.product_name;
+        document.getElementById('viewPrice').innerText = '₱' + parseFloat(p.price).toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('viewStock').innerText = p.stock + ' pcs';
+        document.getElementById('viewCat').innerText = p.category_name;
+        document.getElementById('viewProv').innerText = p.province_name;
+        document.getElementById('viewDesc').innerText = p.description || 'No description provided.';
+        
+        // Handle Image
+        const imgPath = p.image ? "../uploads/" + p.image : "../uploads/default.png";
+        document.getElementById('viewImg').src = imgPath;
+        
+        // Handle Status Badge
+        const statusPill = document.getElementById('viewStatus');
+        const stock = parseInt(p.stock);
+        
+        if(stock === 0) {
+            statusPill.innerText = 'OUT OF STOCK';
+            statusPill.style.color = '#ef4444'; 
+        } else if(stock <= 10) {
+            statusPill.innerText = 'LOW STOCK';
+            statusPill.style.color = '#d98a00'; 
+        } else {
+            statusPill.innerText = 'IN STOCK';
+            statusPill.style.color = '#10b981'; 
+        }
+
+        viewModal.style.display = 'flex';
+    }
+
+    function closeViewModal() {
+        viewModal.style.display = 'none';
+    }
+
+    // Close modal if clicking outside the white content box
+    window.onclick = function(event) {
+        if (event.target == viewModal) closeViewModal();
+    }
+</script>
 </body>
 </html>

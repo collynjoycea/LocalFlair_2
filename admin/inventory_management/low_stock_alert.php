@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 
 $host = "localhost";
 $user = "root";     
-$pass = "WelCome145";            
+$pass = "lily1245";            
 $db   = "localflair_db";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
@@ -22,7 +22,7 @@ $threshold = 10;
 $query = "SELECT p.*, c.category_name 
           FROM products p 
           LEFT JOIN categories c ON p.category_id = c.category_id 
-          WHERE p.stock <= $threshold 
+          WHERE (p.stock <= $threshold) AND (p.status IS NULL OR p.status != 'ARCHIVED')
           ORDER BY p.stock ASC";
 $result = $conn->query($query);
 

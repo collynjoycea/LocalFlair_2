@@ -2,7 +2,7 @@
 session_start();
 $host = "localhost";
 $user = "root";
-$pass = "WelCome145";
+$pass = "lily1245";
 $db   = "localflair_db";
 
 $conn = new mysqli($host, $user, $pass, $db);

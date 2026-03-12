@@ -23,7 +23,6 @@ $sidebar_display_pic = !empty($session_pic)
     :root {
         --sidebar-width: 260px;
         --accent-orange: #e95a24;
-        /* Ginaya ang kulay mula sa Admin Dashboard screenshot */
         --sidebar-bg: #f8fafc; 
         --text-dark: #1e293b;
         --text-muted: #64748b;
@@ -39,15 +38,14 @@ $sidebar_display_pic = !empty($session_pic)
         left: 0;
         top: 0;
         z-index: 1100;
-        box-shadow: none; /* Tinanggal ang shadow para sa flat modern look */
+        box-shadow: none;
         border-right: 1px solid #e2e8f0;
         transition: all 0.3s ease;
     }
 
-    /* HEADER - Management Portal */
     .order-sidebar-header {
         padding: 15px;
-        background: #fff; /* Solid white background */
+        background: #fff;
         text-align: center;
         font-weight: 700;
         font-size: 13px;
@@ -78,7 +76,6 @@ $sidebar_display_pic = !empty($session_pic)
     }
     .logo span { color: var(--accent-orange); }
 
-    /* ADMIN PROFILE */
     .admin-profile {
         text-align: center;
         padding: 20px 15px;
@@ -88,7 +85,7 @@ $sidebar_display_pic = !empty($session_pic)
     .admin-profile img {
         width: 75px;
         height: 75px;
-        border-radius: 50%; /* Circle profile pic based on the dashboard screenshot */
+        border-radius: 50%;
         object-fit: cover;
         border: 3px solid #fff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -110,7 +107,6 @@ $sidebar_display_pic = !empty($session_pic)
         margin-top: 2px;
     }
 
-    /* MENU */
     .order-menu {
         list-style: none;
         padding: 0 15px;
@@ -151,15 +147,13 @@ $sidebar_display_pic = !empty($session_pic)
         text-align: center;
     }
 
-    /* Hover State */
     .order-menu li:hover a {
         background: #f1f5f9;
         color: var(--text-dark);
     }
 
-    /* Active State - Base on Screenshot 3 (Inventory Mgmt Highlight) */
     .order-menu li.active a {
-        background: #fff1eb; /* Very light orange tint */
+        background: #fff1eb;
         color: var(--accent-orange);
         font-weight: 700;
     }
@@ -168,9 +162,9 @@ $sidebar_display_pic = !empty($session_pic)
         color: var(--accent-orange);
     }
 
-    /* Custom Scrollbar */
     .order-menu::-webkit-scrollbar { width: 4px; }
     .order-menu::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    
 </style>
 
 <aside class="sidebar">
@@ -213,6 +207,14 @@ $sidebar_display_pic = !empty($session_pic)
             <a href="low_stock_alert.php">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>Low Stock Alerts</span>
+            </a>
+        </li>
+
+        <!-- ✅ ARCHIVE ADDED HERE -->
+        <li class="<?= ($current_page == 'archived_products.php') ? 'active' : ''; ?>">
+            <a href="archived_products.php">
+                <i class="fa-solid fa-box-archive"></i>
+                <span>Archived Products</span>
             </a>
         </li>
     </ul>

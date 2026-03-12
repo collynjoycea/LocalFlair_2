@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 
 $host = "localhost";
 $user = "root";
-$pass = "WelCome145";
+$pass = "lily1245";
 $db   = "localflair_db";
 
 $conn = new mysqli($host, $user, $pass, $db);
@@ -21,12 +21,11 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_id'])) {
         $id = (int)$_POST['delete_id'];
-        $stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
+        $stmt = $conn->prepare("UPDATE products SET status='ARCHIVED' WHERE product_id=?");
         $stmt->bind_param("i", $id);
         echo $stmt->execute() ? "success" : "error";
         exit();
     }
-
     $p_name = trim($_POST['product_name']);
     $cat    = $_POST['category'];
     $prov   = $_POST['province'];
@@ -75,9 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // 3. FETCH DATA
-$sql = "SELECT p.*, c.category_name, pr.province_name FROM products p 
+$sql = "SELECT p.*, c.category_name, pr.province_name 
+        FROM products p 
         LEFT JOIN categories c ON p.category_id = c.category_id 
         LEFT JOIN provinces pr ON p.province_id = pr.province_id 
+        WHERE p.status IS NULL OR p.status != 'ARCHIVED'
         ORDER BY p.product_id DESC";
 $result = $conn->query($sql);
 ?>
@@ -291,9 +292,8 @@ $result = $conn->query($sql);
             document.getElementById('mTitle').innerText = 'Update Product';
             modal.style.display = 'flex';
         }
-
         function deleteProduct(id) {
-            if(!confirm("Remove this product?")) return;
+            if(!confirm("Archived this product?")) return;
             const fd = new FormData(); 
             fd.append('delete_id', id);
             fetch(window.location.href, { method: 'POST', body: fd }).then(() => location.reload());

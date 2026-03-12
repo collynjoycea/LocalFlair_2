@@ -4,7 +4,7 @@ session_start();
 // 1. DATABASE CONNECTION
 $host = "localhost";
 $user = "root";     
-$pass = "WelCome145";            
+$pass = "lily1245";            
 $db   = "localflair_db";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
@@ -148,7 +148,7 @@ $result = $conn->query($query);
                 <p>Browse and explore all products registered in the system.</p>
             </div>
             <a href="add_product.php" class="add-btn">
-                <i class="fa fa-plus"></i> Add New Product
+                Add New Product
             </a>
         </div>
 

@@ -12,7 +12,7 @@ $current_user = $_SESSION['admin_name'] ?? $_SESSION['employee_name'] ?? 'User';
 // 2. DATABASE CONNECTION
 $host = "localhost";
 $user = "root";
-$pass = "WelCome145";
+$pass = "lily1245";
 $db   = "localflair_db";
 
 $conn = new mysqli($host, $user, $pass, $db);

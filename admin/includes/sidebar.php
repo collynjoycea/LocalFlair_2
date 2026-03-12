@@ -175,18 +175,25 @@ $suki_badge = $suki_count_row['total'];
         <div class="menu-section-label">Main Inventory</div>
         
         <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'active' : ''; ?>">
-            <a href="index.php"><i class="fa-solid fa-grid-2"></i> <span>Dashboard</span></a>
+            <a href="index.php"><i class="fa-solid fa-th-large"></i> <span>Dashboard</span></a>
         </li>
         <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'products.php') ? 'active' : ''; ?>">
-            <a href="products.php"><i class="fa-solid fa-box-archive"></i> <span>Products</span></a>
+            <a href="products.php"><i class="fa-solid fa-box"></i> <span>Products</span></a>
         </li>
         <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'orders.php') ? 'active' : ''; ?>">
             <a href="orders.php"><i class="fa-solid fa-cart-shopping"></i> <span>Orders</span></a>
         </li>
+        <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'archived_products.php') ? 'active' : ''; ?>">
+            <a href="archived_products.php"><i class="fa-solid fa-box-archive"></i> <span>Archived Products</span></a>
+        </li>
+        <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'sales.php') ? 'active' : ''; ?>">
+            <a href="sales.php"><i class="fa-solid fa-chart-line"></i> <span>Sales</span></a>
+        </li>
+      
 
         <div class="menu-section-label">Enhancements</div>
-        <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'crm.php') ? 'active' : ''; ?>">
-            <a href="crm.php"><i class="fa-solid fa-user-gear"></i> <span>CRM Module</span> <span class="badge badge-new">NEW</span></a>
+        <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'crm_module.php') ? 'active' : ''; ?>">
+            <a href="crm_module.php"><i class="fa-solid fa-user-gear"></i> <span>CRM Module</span> <span class="badge badge-new">NEW</span></a>
         </li>
         <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'loyalty.php') ? 'active' : ''; ?>">
     <a href="loyalty.php">
@@ -215,3 +222,4 @@ $suki_badge = $suki_count_row['total'];
         </li>
     </ul>
 </aside>
+
