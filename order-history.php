@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 // Security: Clean the user_id
 $user_id = mysqli_real_escape_string($conn, $_SESSION['user_id']);
 $status_filter = isset($_GET['status']) ? mysqli_real_escape_string($conn, $_GET['status']) : 'All';
+
 ?>
 
 <!DOCTYPE html>

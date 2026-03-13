@@ -148,7 +148,7 @@ $lowCount = $result->num_rows;
             <div class="alert-header">
                 <div>
                     <h2><i class="fa fa-triangle-exclamation"></i> Low Stock Alerts</h2>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Items listed here are below the threshold of <b><?= $threshold ?> units</b>.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: px;">Items listed here are below the threshold of <b><?= $threshold ?> units</b>.</p>
                 </div>
                 <div class="stats-badge">
                     <span>Active Alerts</span>

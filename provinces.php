@@ -223,7 +223,7 @@ body::after {
                 <div class="card-body">
                     <h5 class="fw-bold">Laguna</h5>
                     <p class="text-muted small">Woodcarving & Embroideries</p>
-                    <a href="category_items.php?province_id=3" class="btn btn-explore mt-2">Explore →</a>
+                    <a href="category_items.php?province_id=5" class="btn btn-explore mt-2">Explore →</a>
                 </div>
             </div>
         </div>
@@ -249,7 +249,7 @@ body::after {
                 <div class="card-body">
                     <h5 class="fw-bold">Benguet</h5>
                     <p class="text-muted small">Highland Coffee & Weaving</p>
-                    <a href="category_items.php?province_id=5" class="btn btn-explore mt-2">Explore →</a>
+                    <a href="category_items.php?province_id=3" class="btn btn-explore mt-2">Explore →</a>
                 </div>
             </div>
         </div>

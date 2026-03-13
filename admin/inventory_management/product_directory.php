@@ -23,6 +23,7 @@ $query = "SELECT p.*, c.category_name, pr.province_name
           FROM products p 
           LEFT JOIN categories c ON p.category_id = c.category_id 
           LEFT JOIN provinces pr ON p.province_id = pr.province_id 
+          WHERE COALESCE(p.status,'') != 'ARCHIVED'
           ORDER BY p.product_name ASC";
 $result = $conn->query($query);
 ?>
@@ -67,12 +68,11 @@ $result = $conn->query($query);
         .add-btn:hover { background: #d44d1d; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(233, 90, 36, 0.2); }
 
         /* --- DIRECTORY GRID --- */
-        .directory-grid {
+       .directory-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
-
         .product-card {
             background: var(--white);
             border-radius: 24px;
@@ -88,10 +88,7 @@ $result = $conn->query($query);
 
         .image-container {
             width: 100%;
-            height: 220px;
-            background: #f8fafc;
-            position: relative;
-            overflow: hidden;
+            height: 160px;
         }
 
         .image-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
@@ -147,9 +144,6 @@ $result = $conn->query($query);
                 <h1>Product Directory</h1>
                 <p>Browse and explore all products registered in the system.</p>
             </div>
-            <a href="add_product.php" class="add-btn">
-                Add New Product
-            </a>
         </div>
 
         <div class="directory-grid" id="directoryGrid">

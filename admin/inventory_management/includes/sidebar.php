@@ -209,8 +209,6 @@ $sidebar_display_pic = !empty($session_pic)
                 <span>Low Stock Alerts</span>
             </a>
         </li>
-
-        <!-- ✅ ARCHIVE ADDED HERE -->
         <li class="<?= ($current_page == 'archived_products.php') ? 'active' : ''; ?>">
             <a href="archived_products.php">
                 <i class="fa-solid fa-box-archive"></i>

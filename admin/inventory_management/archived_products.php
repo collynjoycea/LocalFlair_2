@@ -41,7 +41,6 @@ $sql = "SELECT p.*,c.category_name,pr.province_name
 
 $result = $conn->query($sql);
 
-/* ================= PERMANENTLY DELETE PRODUCT ================= */
 if(isset($_POST['delete_permanent_id'])) {
 
     $id = (int)$_POST['delete_permanent_id'];
@@ -88,145 +87,132 @@ if(isset($_POST['delete_permanent_id'])) {
 
 <style>
 
-:root {
-    --primary-orange: #f05a28;
-    --bg-color: #f8fafc;
-    --sidebar-width: 260px;
-    --topbar-height: 80px;
-    --text-dark: #1e293b;
-    --text-muted: #64748b;
-}
+    :root {
+        --bg-color: #f8fafc;
+        --accent-orange: #e95a24;
+        --accent-red: #ef4444;
+        --accent-yellow: #f59e0b;
+        --text-dark: #1e293b;
+        --text-muted: #64748b;
+        --white: #ffffff;
+        --border-color: #f1f5f9;
+        --sidebar-width: 260px;
+        --topbar-height: 70px;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Plus Jakarta Sans',sans-serif;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-dark); display: flex; min-height: 100vh; }
 
-body{
-background:linear-gradient(135deg,#f8fafd 0%,#e2e8f0 100%);
-min-height:100vh;
-color:var(--text-dark);
-}
 
-/* MAIN */
+    body{
+    background:linear-gradient(135deg,#f8fafd 0%,#e2e8f0 100%);
+    min-height:100vh;
+    color:var(--text-dark);
+    }
+    .main{
+        margin-left:var(--sidebar-width);
+        padding:calc(var(--topbar-height) + 30px) 40px 40px 40px;
+        width:calc(100% - var(--sidebar-width));
+    }
 
-.main{
-margin-left:var(--sidebar-width);
-padding:calc(var(--topbar-height) + 30px) 40px 40px 40px;
-width:calc(100% - var(--sidebar-width));
-}
+   .page-header { 
+        display: flex;
+        flex-direction: column;  
+        align-items: flex-start; 
+        margin-bottom: 35px;
+        gap:6px;
+    }
+    
+    .page-header h1 { font-size: 28px; font-weight: 800; color: var(--text-dark); }
+    .page-header p { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
+            
 
-/* HEADER */
+    .table-container{
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.03);
+    border:1px solid #edf2f7;
+    overflow:hidden;
+    margin-top:30px;
+    }
 
-.header-flex{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:30px;
-}
+    table{
+    width:100%;
+    border-collapse:collapse;
+    }
 
-.page-title h2{
-font-size:28px;
-font-weight:800;
-}
+    thead th{
+    text-align:left;
+    padding:20px 25px;
+    background:#fcfdfe;
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border-bottom:1px solid #f1f5f9;
+    }
 
-.page-title p{
-color:var(--text-muted);
-font-size:14px;
-margin-top:4px;
-}
+    tbody td{
+    padding:18px 25px;
+    border-bottom:1px solid #f8fafc;
+    font-size:14px;
+    font-weight:600; /* makes content bold */
+    }
 
-/* TABLE */
+    tbody tr:hover td{
+    background:#fcfdfe;
+    }
 
-.table-container{
-background:#fff;
-border-radius:24px;
-box-shadow:0 10px 40px rgba(0,0,0,0.03);
-border:1px solid #edf2f7;
-overflow:hidden;
-}
+    .sku-text{
+    font-family:monospace;
+    font-weight:800;
+    color:var(--primary-orange);
+    background:#fff5f2;
+    padding:4px 8px;
+    border-radius:6px;
+    }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
+    .product-img{
+    width:45px;
+    height:45px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid #eee;
+    }
 
-thead th{
-text-align:left;
-padding:20px 25px;
-background:#fcfdfe;
-color:#94a3b8;
-font-size:11px;
-font-weight:800;
-text-transform:uppercase;
-letter-spacing:1px;
-border-bottom:1px solid #f1f5f9;
-}
+    .act-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 14px;
+        font-weight: 700;
+        gap: 6px;
+        padding: 6px 12px;
+    }
 
-tbody td{
-padding:18px 25px;
-border-bottom:1px solid #f8fafc;
-font-size:14px;
-}
+    .btn-restore {
+        background: #ecfdf5;
+        color: #059669;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-tbody tr:hover td{
-background:#fcfdfe;
-}
+    .btn-restore i {
+        margin-right: 4px;
+    }
 
-.sku-text{
-font-family:monospace;
-font-weight:800;
-color:var(--primary-orange);
-background:#fff5f2;
-padding:4px 8px;
-border-radius:6px;
-}
-
-.product-img{
-width:45px;
-height:45px;
-object-fit:cover;
-border-radius:10px;
-border:1px solid #eee;
-}
-
-/* BUTTON */
-
-/* BUTTONS */
-.act-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 14px;
-    font-weight: 700;
-    gap: 6px;
-    padding: 6px 12px;
-}
-
-.btn-restore {
-    background: #ecfdf5;
-    color: #059669;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-restore i {
-    margin-right: 4px;
-}
-
-.btn-restore:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
+    .btn-restore:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+    }
 
 </style>
 
@@ -237,18 +223,13 @@ border:1px solid #eee;
 <?php include "includes/sidebar.php"; ?>
 <?php include "includes/topbar.php"; ?>
 
-
 <main class="main">
-
-<div class="header-flex animate__animated animate__fadeIn">
-
-<div class="page-title">
-<h2>Archived Products</h2>
-<p>Products removed from inventory but still stored in the system.</p>
-</div>
-
-</div>
-
+    <div class="header-flex animate__animated animate__fadeIn">
+        <div class="page-header">
+            <h1>Archived Products</h1>
+            <p>Products removed from inventory but still stored in the system.</p>
+        </div>
+    </div>
 
 <div class="table-container animate__animated animate__fadeInUp">
 
