@@ -405,7 +405,7 @@ if(isset($_GET['export']) && $_GET['export'] == "pdf"){
     <main class="main">
         <div class="header-flex animate__animated animate__fadeIn">
             <div class="page-title">
-                <h2>Inventory Management</h2>
+                <h2>Inventory</h2>
                 <p>Monitor your stock levels, product details, and regional origins.</p>
             </div>
             <button class="btn-add" id="openModal">

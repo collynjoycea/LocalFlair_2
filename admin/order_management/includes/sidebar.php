@@ -137,13 +137,6 @@ echo htmlspecialchars($current_user);
             </a>
         </li>
 
-        <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'payment_verification.php') ? 'active' : ''; ?>">
-            <a href="payment_verification.php">
-                <i class="fa-solid fa-money-check"></i>
-                <span>Payment Verification</span>
-            </a>
-        </li>
-
         <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'tracking_order.php') ? 'active' : ''; ?>">
             <a href="tracking_order.php">
                 <i class="fa-solid fa-truck"></i>

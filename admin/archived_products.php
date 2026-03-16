@@ -15,7 +15,6 @@ if ($conn->connect_error) {
     die("Connection failed: ".$conn->connect_error);
 }
 
-
 /* ================= RESTORE PRODUCT ================= */
 
 if(isset($_POST['restore_id'])){
@@ -29,6 +28,33 @@ if(isset($_POST['restore_id'])){
     exit();
 }
 
+/* ================= PERMANENT DELETE ================= */
+
+if(isset($_POST['delete_permanent_id'])) {
+
+    $id = (int)$_POST['delete_permanent_id'];
+
+    $imgQuery = $conn->prepare("SELECT image FROM products WHERE product_id=?");
+    $imgQuery->bind_param("i", $id);
+    $imgQuery->execute();
+    $imgResult = $imgQuery->get_result();
+    $imageName = $imgResult->fetch_assoc()['image'] ?? '';
+
+    $stmt = $conn->prepare("DELETE FROM products WHERE product_id=?");
+    $stmt->bind_param("i", $id);
+
+    if($stmt->execute()) {
+
+        if($imageName && $imageName != "default.png" && file_exists(__DIR__ . "/uploads/" . $imageName)) {
+            unlink(__DIR__ . "/uploads/" . $imageName);
+        }
+
+        echo "deleted";
+    } else {
+        echo "error";
+    }
+    exit();
+}
 
 /* ================= GET ARCHIVED PRODUCTS ================= */
 
@@ -40,34 +66,6 @@ $sql = "SELECT p.*,c.category_name,pr.province_name
         ORDER BY p.product_id DESC";
 
 $result = $conn->query($sql);
-
-/* ================= PERMANENTLY DELETE PRODUCT ================= */
-if(isset($_POST['delete_permanent_id'])) {
-
-    $id = (int)$_POST['delete_permanent_id'];
-
-    // Get image filename to delete
-    $imgQuery = $conn->prepare("SELECT image FROM products WHERE product_id=?");
-    $imgQuery->bind_param("i", $id);
-    $imgQuery->execute();
-    $imgResult = $imgQuery->get_result();
-    $imageName = $imgResult->fetch_assoc()['image'] ?? '';
-
-    // Delete product from DB
-    $stmt = $conn->prepare("DELETE FROM products WHERE product_id=?");
-    $stmt->bind_param("i", $id);
-
-    if($stmt->execute()) {
-        // Delete image file if not default
-        if($imageName && $imageName != "default.png" && file_exists(__DIR__ . "/uploads/" . $imageName)) {
-            unlink(__DIR__ . "/uploads/" . $imageName);
-        }
-        echo "deleted";
-    } else {
-        echo "error";
-    }
-    exit();
-}
 
 ?>
 
@@ -194,38 +192,26 @@ border:1px solid #eee;
 
 /* BUTTON */
 
-/* BUTTONS */
 .act-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 14px;
-    font-weight: 700;
-    gap: 6px;
-    padding: 6px 12px;
+width:36px;
+height:36px;
+border-radius:10px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+border:none;
+cursor:pointer;
+transition:0.2s;
+font-size:14px;
 }
 
-.btn-restore {
-    background: #ecfdf5;
-    color: #059669;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.btn-restore{
+background:#ecfdf5;
+color:#059669;
 }
 
-.btn-restore i {
-    margin-right: 4px;
-}
-
-.btn-restore:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
+.btn-restore:hover{
+transform:translateY(-2px);
 }
 
 </style>
@@ -237,7 +223,6 @@ border:1px solid #eee;
 <?php include "includes/sidebar.php"; ?>
 <?php include "includes/topbar.php"; ?>
 
-
 <main class="main">
 
 <div class="header-flex animate__animated animate__fadeIn">
@@ -248,7 +233,6 @@ border:1px solid #eee;
 </div>
 
 </div>
-
 
 <div class="table-container animate__animated animate__fadeInUp">
 
@@ -262,7 +246,6 @@ border:1px solid #eee;
 <th>Category</th>
 <th>Location</th>
 <th>Price</th>
-<th>Stock</th>
 <th style="text-align:right;">Action</th>
 </tr>
 
@@ -301,19 +284,15 @@ border:1px solid #eee;
 
 <td>₱<?= number_format($row['price'],2) ?></td>
 
-<td><?= $row['stock'] ?></td>
-
 <td style="text-align:right">
 
 <button onclick="restoreProduct(<?= $row['product_id'] ?>)" class="act-btn btn-restore" title="Restore">
-    <i class="fa-solid fa-rotate-left"></i>
+<i class="fa-solid fa-rotate-left"></i>
 </button>
 
-<button onclick="deletePermanentProduct(<?= $row['product_id'] ?>)" class="act-btn btn-delete" title="Delete Permanently" style="background:#fef2f2; color:#dc2626; margin-left:6px;">
+<button onclick="deletePermanentProduct(<?= $row['product_id'] ?>)" class="act-btn" title="Delete Permanently" style="background:#fef2f2;color:#dc2626;margin-left:6px;">
 <i class="fa-solid fa-trash-can"></i>
 </button>
-
-</td>
 
 </td>
 
@@ -324,13 +303,9 @@ border:1px solid #eee;
 <?php else: ?>
 
 <tr>
-
-<td colspan="7" style="text-align:center;padding:60px;color:#64748b">
-
+<td colspan="6" style="text-align:center;padding:60px;color:#64748b">
 No archived products found
-
 </td>
-
 </tr>
 
 <?php endif; ?>
@@ -342,7 +317,6 @@ No archived products found
 </div>
 
 </main>
-
 
 <script>
 
@@ -359,35 +333,32 @@ body:fd
 })
 .then(res=>res.text())
 .then(data=>{
-
 if(data.trim()=="restored"){
-
 alert("Product Restored");
-
 location.reload();
-
 }
+});
+}
+
 function deletePermanentProduct(id){
-    if(!confirm("Are you sure? This will permanently delete the product!")) return;
 
-    const fd = new FormData();
-    fd.append("delete_permanent_id", id);
+if(!confirm("Are you sure? This will permanently delete the product!")) return;
 
-    fetch(window.location.href,{
-        method:"POST",
-        body:fd
-    })
-    .then(res => res.text())
-    .then(data => {
-        if(data.trim() === "deleted"){
-            alert("Product Permanently Deleted");
-            location.reload();
-        } else {
-            alert("Error deleting product");
-        }
-    });
+const fd = new FormData();
+fd.append("delete_permanent_id",id);
+
+fetch(window.location.href,{
+method:"POST",
+body:fd
+})
+.then(res=>res.text())
+.then(data=>{
+if(data.trim()=="deleted"){
+alert("Product Permanently Deleted");
+location.reload();
+}else{
+alert("Error deleting product");
 }
-
 });
 
 }

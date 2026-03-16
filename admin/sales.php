@@ -318,8 +318,6 @@ tbody tr:hover td { background:#fafcff; }
         $cards = [
             ['icon'=>'fa-peso-sign','bg'=>'#fff5f2','color'=>'#f05a28','label'=>'Total Revenue','value'=>'₱'.number_format($total_sales,2),'pct'=>$sales_pct],
             ['icon'=>'fa-cart-shopping','bg'=>'#ecfdf5','color'=>'#059669','label'=>'Total Orders','value'=>number_format($total_orders),'pct'=>$orders_pct],
-            ['icon'=>'fa-receipt','bg'=>'#eff6ff','color'=>'#2563eb','label'=>'Avg. Order Value','value'=>'₱'.number_format($avg_order,2),'pct'=>null],
-            ['icon'=>'fa-users','bg'=>'#fffbeb','color'=>'#d97706','label'=>'Unique Buyers','value'=>number_format($unique_buyers),'pct'=>null],
         ];
         foreach($cards as $c):
             $pct = $c['pct'];
@@ -505,8 +503,7 @@ function exportPDF() {
     const summaryData = [
         ['Total Revenue', '₱<?= number_format($total_sales,2) ?>'],
         ['Total Orders', '<?= number_format($total_orders) ?>'],
-        ['Avg. Order Value', '₱<?= number_format($avg_order,2) ?>'],
-        ['Unique Buyers', '<?= number_format($unique_buyers) ?>'],
+   
     ];
     doc.autoTable({
         startY: summaryY,
